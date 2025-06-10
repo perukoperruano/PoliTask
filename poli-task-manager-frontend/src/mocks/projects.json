@@ -1,0 +1,27 @@
+
+[
+  {
+    "id": "proj_1",
+    "name": "Desarrollo App Móvil Q1",
+    "description": "Proyecto para el desarrollo de la nueva aplicación móvil de la empresa, enfocada en mejorar la experiencia del usuario.",
+    "owner_id": "user_1",
+    "created_at": "2024-02-01T09:00:00Z",
+    "updated_at": "2024-02-15T14:30:00Z"
+  },
+  {
+    "id": "proj_2",
+    "name": "Campaña Marketing Verano",
+    "description": "Planificación y ejecución de la campaña de marketing para la temporada de verano, incluyendo redes sociales y publicidad online.",
+    "owner_id": "user_2",
+    "created_at": "2024-02-10T16:00:00Z",
+    "updated_at": "2024-02-20T10:00:00Z"
+  },
+  {
+    "id": "proj_3",
+    "name": "Investigación UX Nuevo Portal",
+    "description": "Fase de investigación y definición de requerimientos UX para el rediseño del portal web corporativo.",
+    "owner_id": "user_1",
+    "created_at": "2024-03-01T11:00:00Z",
+    "updated_at": "2024-03-05T12:00:00Z"
+  }
+]

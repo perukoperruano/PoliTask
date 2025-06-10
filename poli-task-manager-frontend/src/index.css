@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ... keep existing code (color variables) */
+    --background: 0 0% 100%; /* Blanco */
+    --foreground: 257 84% 10%; /* brand-dark-purple ajustado a HSL */
+
+    /* Tarjetas y Popovers */
+    --card: 0 0% 100%;
+    --card-foreground: 257 84% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 257 84% 10%;
+
+    /* Primario (brand-primary-purple) */
+    --primary: 250 88% 75%; /* #9b87f5 */
+    --primary-foreground: 0 0% 100%; /* Blanco para contraste */
+
+    /* Secundario (brand-secondary-purple) */
+    --secondary: 260 27% 57%; /* #7E69AB */
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted (brand-neutral-gray) */
+    --muted: 220 4% 60%; /* #8E9196 */
+    --muted-foreground: 220 5% 40%; 
+
+    /* Acento (blue-200: #BFDBFE) */
+    --accent: 217 91% 87%; /* Actualizado a azul pastel */
+    --accent-foreground: 257 84% 10%; /* Actualizado a texto oscuro para contraste */
+
+    /* Destructivo (rojo estándar) */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Bordes e Inputs */
+    --border: 240 6% 90%; /* Gris claro */
+    --input: 240 6% 90%;
+    --ring: 250 88% 75%; /* brand-primary-purple para focus rings */
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* ... keep existing code (dark mode color variables) */
+    --background: 257 84% 10%; /* #1A1F2C */
+    --foreground: 0 0% 98%; /* Blanco/Casi blanco */
+
+    --card: 257 84% 12%; /* Un poco más claro que el fondo */
+    --card-foreground: 0 0% 98%;
+
+    --popover: 257 84% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 250 88% 75%; /* #9b87f5 - Mantenemos el primario brillante */
+    --primary-foreground: 257 84% 10%; /* Texto oscuro sobre primario brillante */
+
+    --secondary: 260 27% 57%; /* #7E69AB */
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 220 10% 25%;
+    --muted-foreground: 220 5% 65%;
+
+    /* Acento (blue-200: #BFDBFE) */
+    --accent: 217 91% 87%; /* Actualizado a azul pastel */
+    --accent-foreground: 257 84% 10%; /* Actualizado a texto oscuro para contraste */
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 4% 20%;
+    --input: 240 4% 20%;
+    --ring: 250 88% 75%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  /* Asegurar que el #root ocupa toda la altura */
+  html, body, #root {
+    height: 100%;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn text-white bg-brand-primary-purple hover:bg-brand-secondary-purple focus:ring-brand-primary-purple dark:focus:ring-offset-brand-dark-purple;
+  }
+  .btn-secondary {
+    @apply btn text-gray-700 bg-gray-200 hover:bg-gray-300 focus:ring-gray-400 dark:text-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500 dark:focus:ring-offset-brand-dark-purple;
+  }
+  .btn-danger {
+    @apply btn text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 dark:focus:ring-offset-brand-dark-purple;
+  }
+  /* Para botones que solo tienen íconos */
+  .btn-icon {
+    @apply btn p-2; /* Padding más ajustado para íconos */
+  }
+}
