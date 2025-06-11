@@ -34,8 +34,14 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
+                // Permitir explícitamente todos los endpoints de auth
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/users/**").permitAll() // Temporal para testing
+                // Permitir usuarios temporalmente para testing
+                .requestMatchers("/api/users/**").permitAll()
+                // Permitir endpoints de salud y actuator si los tienes
+                .requestMatchers("/actuator/**").permitAll()
+                .requestMatchers("/health").permitAll()
+                // Requerir autenticación para todo lo demás
                 .anyRequest().authenticated()
             )
             .exceptionHandling(exception -> exception
@@ -56,7 +62,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000"));
+        // Permitir orígenes específicos
+        configuration.setAllowedOrigins(List.of(
+            "http://localhost:8080", 
+            "http://localhost:3000",
+            "http://localhost:8081"
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
