@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,40 +69,43 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createProject(@Valid @RequestBody CreateProjectRequest request, BindingResult bindingResult) {
-        // Validar errores de validación
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
-            bindingResult.getFieldErrors().forEach(error -> 
-                errors.put(error.getField(), error.getDefaultMessage())
-            );
-            return ResponseEntity.badRequest().body(errors);
-        }
-
-        try {
-            // Verificar que el usuario existe
-            Optional<User> ownerOpt = userRepository.findById(request.getOwnerId());
-            if (!ownerOpt.isPresent()) {
-                Map<String, String> error = new HashMap<>();
-                error.put("ownerId", "Usuario no encontrado");
-                return ResponseEntity.badRequest().body(error);
-            }
-
-            // Crear proyecto
-            Project project = new Project();
-            project.setName(request.getName());
-            project.setDescription(request.getDescription());
-            project.setOwner(ownerOpt.get());
-
-            Project createdProject = projectService.createProject(project);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
-
-        } catch (Exception e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("message", "Error al crear el proyecto");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-        }
+public ResponseEntity<?> createProject(@Valid @RequestBody CreateProjectRequest request, BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+        Map<String, String> errors = new HashMap<>();
+        bindingResult.getFieldErrors().forEach(error -> 
+            errors.put(error.getField(), error.getDefaultMessage())
+        );
+        return ResponseEntity.badRequest().body(errors);
     }
+
+    try {
+        // Obtener el email del usuario autenticado desde el JWT
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        // Buscar al usuario por email
+        Optional<User> ownerOpt = userRepository.findByEmail(email);
+        if (!ownerOpt.isPresent()) {
+            Map<String, String> error = new HashMap<>();
+            error.put("message", "Usuario no autenticado");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+
+        // Crear proyecto
+        Project project = new Project();
+        project.setName(request.getName());
+        project.setDescription(request.getDescription());
+        project.setOwner(ownerOpt.get());
+
+        Project createdProject = projectService.createProject(project);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
+
+    } catch (Exception e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("message", "Error al crear el proyecto");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+}
 
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateProject(@PathVariable Long id, @Valid @RequestBody CreateProjectRequest request, BindingResult bindingResult) {

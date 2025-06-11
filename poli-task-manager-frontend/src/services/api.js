@@ -26,11 +26,19 @@ export const getUserById = async (id) => {
 
 export const register = async (name, email, password) => {
   try {
-    const res = await axios.post(`${API_URL}/api/users`, {
+    const res = await axios.post(`${API_URL}/api/auth/register`, {
       name,
       email,
-      passwordHash: password
+      password
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
+
+    // Guarda el token en localStorage
+    localStorage.setItem('token', res.data.token);
+
     return { success: true, user: res.data };
   } catch (err) {
     console.error("Error en register:", err);
@@ -44,12 +52,17 @@ export const login = async (email, password) => {
       email,
       password
     });
+
+    // Guarda el token en localStorage
+    localStorage.setItem('token', res.data.token);
+
     return { success: true, user: res.data };
   } catch (err) {
     console.error("Error en login:", err);
     return { success: false, message: err.response?.data || 'Credenciales inválidas' };
   }
 };
+
 
 // ---------------- PROJECTS ----------------
 export const getProjects = async () => {
@@ -74,13 +87,24 @@ export const getProjectById = async (id) => {
 
 export const createProject = async (project) => {
   try {
-    const res = await axios.post(`${API_URL}/api/projects`, project);
+    const token = localStorage.getItem('token');
+
+    if (!token) throw new Error('Usuario no autenticado');
+
+    const res = await axios.post(`${API_URL}/api/projects`, project, {
+      headers: {
+        'Authorization': `Bearer ${token}`, // <-- Asegúrate que esto esté
+        'Content-Type': 'application/json'
+      }
+    });
+
     return { success: true, project: res.data };
   } catch (err) {
     console.error("Error en createProject:", err);
     return { success: false, message: err.response?.data || 'Error al crear el proyecto' };
   }
 };
+
 
 // ---------------- TASKS ----------------
 export const getAllTasks = async () => {
